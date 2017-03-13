@@ -34,12 +34,12 @@ def print_internal(message):
 def print_header(message):
     print_internal(console.format.bold(message))
 
-def write_single_report(self, report_file, headers, data, write_header=True, show_also_in_console=True):
-    report_format = self._config.opts("reporting", "format")
+
+def write_single_report(report_file, report_format, headers, data, write_header=True, show_also_in_console=True):
     if report_format == "markdown":
-        formatter = self.format_as_markdown
+        formatter = format_as_markdown()
     elif report_format == "csv":
-        formatter = self.format_as_csv
+        formatter = format_as_csv()
     else:
         raise exceptions.SystemSetupError("Unknown report format '%s'" % report_format)
 
@@ -54,6 +54,26 @@ def write_single_report(self, report_file, headers, data, write_header=True, sho
         rio.ensure_dir(rio.dirname(normalized_report_file))
         with open(normalized_report_file, mode="a+", encoding="UTF-8") as f:
             f.writelines(formatter(headers, data, write_header))
+
+
+def format_as_markdown(headers, data, write_header=True):
+    rendered = tabulate.tabulate(data, headers=headers, tablefmt="pipe", numalign="right", stralign="right")
+    if write_header:
+        return rendered + "\n"
+    else:
+        # remove all header data (it's not possible to do so entirely with tabulate directly...)
+        return "\n".join(rendered.splitlines()[2:]) + "\n"
+
+
+def format_as_csv(headers, data, write_header=True):
+    with io.StringIO() as out:
+        writer = csv.writer(out)
+        if write_header:
+            writer.writerow(headers)
+        for metric_record in data:
+            writer.writerow(metric_record)
+        return out.getvalue()
+
 
 class Stats:
     def __init__(self, store, challenge, lap=None):
@@ -252,30 +272,13 @@ class SummaryReporter:
 
     def write_report(self, metrics_table, meta_info_table):
         report_file = self._config.opts("reporting", "output.path")
+        report_format = self._config.opts("reporting", "format")
 
-        write_single_report(report_file, headers=["Lap", "Metric", "Operation", "Value", "Unit"], data=metrics_table,
+        write_single_report(report_file, report_format, headers=["Lap", "Metric", "Operation", "Value", "Unit"], data=metrics_table,
                                  write_header=self.needs_header())
 
         if self.is_final_report() and len(report_file) > 0:
             write_single_report("%s.meta" % report_file, headers=["Name", "Value"], data=meta_info_table, show_also_in_console=False)
-
-
-    def format_as_markdown(self, headers, data, write_header=True):
-        rendered = tabulate.tabulate(data, headers=headers, tablefmt="pipe", numalign="right", stralign="right")
-        if write_header:
-            return rendered + "\n"
-        else:
-            # remove all header data (it's not possible to do so entirely with tabulate directly...)
-            return "\n".join(rendered.splitlines()[2:]) + "\n"
-
-    def format_as_csv(self, headers, data, write_header=True):
-        with io.StringIO() as out:
-            writer = csv.writer(out)
-            if write_header:
-                writer.writerow(headers)
-            for metric_record in data:
-                writer.writerow(metric_record)
-            return out.getvalue()
 
     def report_throughput(self, stats, operation):
         min, median, max, unit = stats.op_metrics[operation.name]["throughput"]
@@ -419,6 +422,7 @@ class ComparisonReporter:
         print_internal("")
 
         print_internal(self.format_as_table(self.metrics_table(baseline_stats, contender_stats)))
+        
         metrics_table = []
         metrics_table += self.report_total_times(baseline_stats, contender_stats)
         metrics_table += self.report_merge_part_times(baseline_stats, contender_stats)
@@ -445,25 +449,9 @@ class ComparisonReporter:
 
     def write_report(self, metrics_table):
         report_file = self._config.opts("reporting", "output.path")
+        report_format = self._config.opts("reporting", "format")
 
-        write_single_report(report_file, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], data=metrics_table,write_header=self.needs_header())
-
-    def format_as_markdown(self, headers, data, write_header=True):
-        rendered = tabulate.tabulate(data, headers=headers, tablefmt="pipe", numalign="right", stralign="right")
-        if write_header:
-            return rendered + "\n"
-        else:
-            # remove all header data (it's not possible to do so entirely with tabulate directly...)
-            return "\n".join(rendered.splitlines()[2:]) + "\n"
-
-    def format_as_csv(self, headers, data, write_header=True):
-        with io.StringIO() as out:
-            writer = csv.writer(out)
-            if write_header:
-                writer.writerow(headers)
-            for metric_record in data:
-                writer.writerow(metric_record)
-            return out.getvalue()
+        write_single_report(report_file, report_format, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], data=metrics_table, write_header=self.needs_header())
 
     def report_throughput(self, baseline_stats, contender_stats, operation):
         b_min, b_median, b_max, b_unit = baseline_stats.op_metrics[operation]["throughput"]
