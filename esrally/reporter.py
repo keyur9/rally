@@ -384,26 +384,6 @@ class ComparisonReporter:
     def __init__(self, config):
         self._config = config
     
-    def metrics_table(self, baseline_stats, contender_stats):
-        metrics_table = []
-        metrics_table += self.report_total_times(baseline_stats, contender_stats)
-        metrics_table += self.report_merge_part_times(baseline_stats, contender_stats)
-
-        # metrics_table += self.report_cpu_usage(baseline_stats, contender_stats)
-        metrics_table += self.report_gc_times(baseline_stats, contender_stats)
-
-        metrics_table += self.report_disk_usage(baseline_stats, contender_stats)
-        metrics_table += self.report_segment_memory(baseline_stats, contender_stats)
-        metrics_table += self.report_segment_counts(baseline_stats, contender_stats)
-
-        for op in baseline_stats.op_metrics.keys():
-            if op in contender_stats.op_metrics:
-                metrics_table += self.report_throughput(baseline_stats, contender_stats, op)
-                metrics_table += self.report_latency(baseline_stats, contender_stats, op)
-                metrics_table += self.report_service_time(baseline_stats, contender_stats, op)
-                metrics_table += self.report_error_rate(baseline_stats, contender_stats, op)
-        return metrics_table
-
     def report(self, r1, r2):
         logger.info("Generating comparison report for baseline (invocation=[%s], track=[%s], challenge=[%s], car=[%s]) and "
                     "contender (invocation=[%s], track=[%s], challenge=[%s], car=[%s])" %
@@ -446,6 +426,26 @@ class ComparisonReporter:
 
         self.write_report(metric_table)
 
+    def metrics_table(self, baseline_stats, contender_stats):
+        metrics_table = []
+        metrics_table += self.report_total_times(baseline_stats, contender_stats)
+        metrics_table += self.report_merge_part_times(baseline_stats, contender_stats)
+
+        # metrics_table += self.report_cpu_usage(baseline_stats, contender_stats)
+        metrics_table += self.report_gc_times(baseline_stats, contender_stats)
+
+        metrics_table += self.report_disk_usage(baseline_stats, contender_stats)
+        metrics_table += self.report_segment_memory(baseline_stats, contender_stats)
+        metrics_table += self.report_segment_counts(baseline_stats, contender_stats)
+
+        for op in baseline_stats.op_metrics.keys():
+            if op in contender_stats.op_metrics:
+                metrics_table += self.report_throughput(baseline_stats, contender_stats, op)
+                metrics_table += self.report_latency(baseline_stats, contender_stats, op)
+                metrics_table += self.report_service_time(baseline_stats, contender_stats, op)
+                metrics_table += self.report_error_rate(baseline_stats, contender_stats, op)
+        return metrics_table
+
     def format_as_table(self, table):
         return tabulate.tabulate(table,
                                  headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"],
@@ -455,8 +455,7 @@ class ComparisonReporter:
         report_file = self._config.opts("reporting", "output.path")
 
         self.write_single_report(report_file, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], 
-            data=self.format_as_table(self.metrics_table(baseline_stats, contender_stats),
-                                 write_header=True))
+            data=metric_table,write_header=True))
 
     def write_single_report(self, report_file, headers, data, write_header=True, show_also_in_console=True):
         report_format = self._config.opts("reporting", "format")
