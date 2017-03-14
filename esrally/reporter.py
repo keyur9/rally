@@ -383,27 +383,7 @@ class SummaryReporter:
 class ComparisonReporter:
     def __init__(self, config):
         self._config = config
-
-    def metrics_table(self, baseline_stats, contender_stats):
-        metrics_table = []
-        metrics_table += self.report_total_times(baseline_stats, contender_stats)
-        metrics_table += self.report_merge_part_times(baseline_stats, contender_stats)
-
-        # metrics_table += self.report_cpu_usage(baseline_stats, contender_stats)
-        metrics_table += self.report_gc_times(baseline_stats, contender_stats)
-
-        metrics_table += self.report_disk_usage(baseline_stats, contender_stats)
-        metrics_table += self.report_segment_memory(baseline_stats, contender_stats)
-        metrics_table += self.report_segment_counts(baseline_stats, contender_stats)
-
-        for op in baseline_stats.op_metrics.keys():
-            if op in contender_stats.op_metrics:
-                metrics_table += self.report_throughput(baseline_stats, contender_stats, op)
-                metrics_table += self.report_latency(baseline_stats, contender_stats, op)
-                metrics_table += self.report_service_time(baseline_stats, contender_stats, op)
-                metrics_table += self.report_error_rate(baseline_stats, contender_stats, op)
-        return metrics_table
-            
+    
     def report(self, r1, r2):
         logger.info("Generating comparison report for baseline (invocation=[%s], track=[%s], challenge=[%s], car=[%s]) and "
                     "contender (invocation=[%s], track=[%s], challenge=[%s], car=[%s])" %
@@ -439,12 +419,28 @@ class ComparisonReporter:
         print_internal("")
 
         print_internal(self.format_as_table(self.metrics_table(baseline_stats, contender_stats)))
-
-        print_internal("Calling metrics table")
-        metric_table = self.metrics_table(baseline_stats, contender_stats)
-        print_internal("Hopefully it ran this time: %s" % metric_table)
-
+        metric_table = self.format_as_table(self.metrics_table(baseline_stats, contender_stats))
         self.write_report(metric_table)
+
+    def metrics_table(self, baseline_stats, contender_stats):
+        metrics_table = []
+        metrics_table += self.report_total_times(baseline_stats, contender_stats)
+        metrics_table += self.report_merge_part_times(baseline_stats, contender_stats)
+
+        # metrics_table += self.report_cpu_usage(baseline_stats, contender_stats)
+        metrics_table += self.report_gc_times(baseline_stats, contender_stats)
+
+        metrics_table += self.report_disk_usage(baseline_stats, contender_stats)
+        metrics_table += self.report_segment_memory(baseline_stats, contender_stats)
+        metrics_table += self.report_segment_counts(baseline_stats, contender_stats)
+
+        for op in baseline_stats.op_metrics.keys():
+            if op in contender_stats.op_metrics:
+                metrics_table += self.report_throughput(baseline_stats, contender_stats, op)
+                metrics_table += self.report_latency(baseline_stats, contender_stats, op)
+                metrics_table += self.report_service_time(baseline_stats, contender_stats, op)
+                metrics_table += self.report_error_rate(baseline_stats, contender_stats, op)
+        return metrics_table
 
     def format_as_table(self, table):
         return tabulate.tabulate(table,
