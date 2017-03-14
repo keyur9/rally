@@ -417,9 +417,10 @@ class ComparisonReporter:
         print_header("------------------------------------------------------")
         print_internal("")
 
-        
         metric_table = self.metrics_table(baseline_stats, contender_stats)
         self.write_report(metric_table)
+        print_internal("Metric Table data")
+        print_internal(metric_table)
 
     def metrics_table(self, baseline_stats, contender_stats):
         metrics_table = []
