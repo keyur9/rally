@@ -37,9 +37,9 @@ def print_header(message):
 def write_single_report(report_file, report_format, headers, data, write_header=True, show_also_in_console=True):
     
     if report_format == "markdown":
-        formatter = format_as_markdown()
+        formatter = format_as_markdown
     elif report_format == "csv":
-        formatter = format_as_csv()
+        formatter = format_as_csv
     else:
         raise exceptions.SystemSetupError("Unknown report format '%s'" % report_format)
 
