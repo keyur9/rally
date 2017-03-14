@@ -454,7 +454,7 @@ class ComparisonReporter:
     def write_report(self, metrics_table):
         report_file = self._config.opts("reporting", "output.path")
 
-        self.write_single_report(report_file, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], data=self.format_as_table(metrics_table),
+        self.write_single_report(report_file, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], data=self.format_as_table(self.metrics_table(baseline_stats, contender_stats),
                                  write_header=True)
 
     def write_single_report(self, report_file, headers, data, write_header=True, show_also_in_console=True):
