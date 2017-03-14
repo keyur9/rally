@@ -71,8 +71,6 @@ def format_as_csv(headers, data, write_header=True):
             writer.writerow(metric_record)
         return out.getvalue()
 
-
-
 class Stats:
     def __init__(self, store, challenge, lap=None):
         self.store = store
@@ -419,7 +417,7 @@ class ComparisonReporter:
         print_header("------------------------------------------------------")
         print_internal("")
 
-        print_internal(self.format_as_table(self.metrics_table(baseline_stats, contender_stats)))
+        
         metric_table = self.metrics_table(baseline_stats, contender_stats)
         self.write_report(metric_table)
 
