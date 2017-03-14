@@ -34,7 +34,7 @@ def print_internal(message):
 def print_header(message):
     print_internal(console.format.bold(message))
 
-def write_single_report(report_file, report_format, headers, data, write_header=True, show_also_in_console=True):
+def write_single_report(report_file, report_format, cwd, headers, data, write_header=True, show_also_in_console=True):
     
     if report_format == "markdown":
         formatter = format_as_markdown
@@ -46,7 +46,6 @@ def write_single_report(report_file, report_format, headers, data, write_header=
     if show_also_in_console:
         print_internal(formatter(headers, data))
     if len(report_file) > 0:
-        cwd = _config.opts("node", "rally.cwd")
         normalized_report_file = rio.normalize_path(report_file, cwd)
         logger.info("Writing report to [%s] (user specified: [%s]) in format [%s]" %
                     (normalized_report_file, report_file, report_format))
@@ -272,7 +271,8 @@ class SummaryReporter:
     def write_report(self, metrics_table, meta_info_table):
         report_file = self._config.opts("reporting", "output.path")
         report_format = self._config.opts("reporting", "format")
-        write_single_report(report_file, report_format, headers=["Lap", "Metric", "Operation", "Value", "Unit"], data=metrics_table,
+        cwd = self._config.opts("node", "rally.cwd")
+        write_single_report(report_file, report_format, cwd, headers=["Lap", "Metric", "Operation", "Value", "Unit"], data=metrics_table,
                                  write_header=self.needs_header())
 
         if self.is_final_report() and len(report_file) > 0:
@@ -451,7 +451,8 @@ class ComparisonReporter:
     def write_report(self, metrics_table):
         report_file = self._config.opts("reporting", "output.path")
         report_format = self._config.opts("reporting", "format")
-        write_single_report(report_file, report_format, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], 
+        cwd = self._config.opts("node", "rally.cwd")
+        write_single_report(report_file, report_format, cwd, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], 
             data= metrics_table, write_header=True)
 
     def report_throughput(self, baseline_stats, contender_stats, operation):
