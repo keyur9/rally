@@ -441,7 +441,7 @@ class ComparisonReporter:
         print_internal(self.format_as_table(self.metrics_table(baseline_stats, contender_stats)))
 
         print_internal("Calling metrics table")
-        metric_table = self.metrics_table()
+        metric_table = self.metrics_table(baseline_stats, contender_stats)
         print_internal("Hopefully it ran this time: %s" % metric_table)
 
         self.write_report(metric_table)
