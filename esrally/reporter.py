@@ -46,7 +46,7 @@ def write_single_report(report_file, report_format, headers, data, write_header=
     if show_also_in_console:
         print_internal(formatter(headers, data))
     if len(report_file) > 0:
-        cwd = self._config.opts("node", "rally.cwd")
+        cwd = _config.opts("node", "rally.cwd")
         normalized_report_file = rio.normalize_path(report_file, cwd)
         logger.info("Writing report to [%s] (user specified: [%s]) in format [%s]" %
                     (normalized_report_file, report_file, report_format))
