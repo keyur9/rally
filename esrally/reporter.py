@@ -230,6 +230,11 @@ class SummaryReporter:
 
         self.write_report(metrics_table, meta_info_table)
 
+        print_internal("Metrics Table Summary")
+        print_internal(metrics_table)
+        print_internal("Meto info summary")
+        print_internal(meta_info_table)
+
     def write_report(self, metrics_table, meta_info_table):
         report_file = self._config.opts("reporting", "output.path")
 
