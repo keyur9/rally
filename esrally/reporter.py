@@ -421,8 +421,6 @@ class ComparisonReporter:
         self.write_report(metric_table)
         print_internal("Metric Table data")
         print_internal(metric_table)
-        print_internal("Metrics Table data")
-        print_internal(metrics_table)
 
     def metrics_table(self, baseline_stats, contender_stats):
         metrics_table = []
@@ -455,6 +453,8 @@ class ComparisonReporter:
         cwd = self._config.opts("node", "rally.cwd")
         write_single_report(report_file, report_format, cwd, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], 
             data= metrics_table, write_header=True)
+        print_internal("Metrics Table data inside write report")
+        print_internal(metrics_table)
 
     def report_throughput(self, baseline_stats, contender_stats, operation):
         b_min, b_median, b_max, b_unit = baseline_stats.op_metrics[operation]["throughput"]
