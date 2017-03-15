@@ -272,7 +272,6 @@ class SummaryReporter:
         cwd = self._config.opts("node", "rally.cwd")
         write_single_report(report_file, report_format, cwd, headers=["Lap", "Metric", "Operation", "Value", "Unit"], data=metrics_table,
                                  write_header=self.needs_header())
-
         if self.is_final_report() and len(report_file) > 0:
             write_single_report("%s.meta" % report_file, headers=["Name", "Value"], data=meta_info_table, show_also_in_console=False)
 
