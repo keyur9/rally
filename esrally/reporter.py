@@ -605,7 +605,8 @@ class ComparisonReporter:
     def line(self, metric, baseline, contender, operation, unit, treat_increase_as_improvement, formatter=lambda x: x):
         if baseline is not None and contender is not None:
             print_internal("Start")
-            test = self.diff(baseline, contender, treat_increase_as_improvement, formatter)
+            test = [metric, str(operation), formatter(baseline), formatter(contender),
+                    self.diff(baseline, contender, treat_increase_as_improvement, formatter), unit]
             print_internal(test)
             print_internal("End")
             return [metric, str(operation), formatter(baseline), formatter(contender),
