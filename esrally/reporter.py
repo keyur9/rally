@@ -635,4 +635,6 @@ class ComparisonReporter:
             return color_smaller("%.5f" % diff)
         else:
             # tabulate needs this to align all values correctly
+            print_internal("Console")
+            print_internal(console.format.neutral("%.5f" % diff))
             return console.format.neutral("%.5f" % diff)
