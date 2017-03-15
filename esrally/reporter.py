@@ -423,14 +423,9 @@ class ComparisonReporter:
     def metrics_table(self, baseline_stats, contender_stats):
         metrics_table = []
         metrics_table += self.report_total_times(baseline_stats, contender_stats)
-        print_internal("Total Times")
-        print_internal(metrics_table)
         metrics_table += self.report_merge_part_times(baseline_stats, contender_stats)
-        print_internal("Merge Times")
-        print_internal(metrics_table)
         # metrics_table += self.report_cpu_usage(baseline_stats, contender_stats)
         metrics_table += self.report_gc_times(baseline_stats, contender_stats)
-
         metrics_table += self.report_disk_usage(baseline_stats, contender_stats)
         metrics_table += self.report_segment_memory(baseline_stats, contender_stats)
         metrics_table += self.report_segment_counts(baseline_stats, contender_stats)
@@ -619,9 +614,9 @@ class ComparisonReporter:
             color_smaller = console.format.green
 
         if diff > 0:
-            return ("+%.5f" % diff)
+            return color_greater("+%.5f" % diff)
         elif diff < 0:
-            return ("%.5f" % diff)
+            return color_smaller("%.5f" % diff)
         else:
             # tabulate needs this to align all values correctly
-            return ("%.5f" % diff)
+            return console.format.neutral("%.5f" % diff)
