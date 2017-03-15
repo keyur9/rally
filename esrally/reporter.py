@@ -607,7 +607,11 @@ class ComparisonReporter:
             print_internal("Start")
             test = [metric, str(operation), formatter(baseline), formatter(contender),
                     self.diff(baseline, contender, treat_increase_as_improvement, formatter), unit]
+            test1 = self.diff(baseline, contender, treat_increase_as_improvement, formatter)
+            test2 = [metric, str(operation), formatter(baseline), formatter(contender),unit]
             print_internal(test)
+            print_internal(test1)
+            print_internal(test2)
             print_internal("End")
             return [metric, str(operation), formatter(baseline), formatter(contender),
                     self.diff(baseline, contender, treat_increase_as_improvement, formatter), unit]
