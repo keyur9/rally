@@ -609,7 +609,7 @@ class ComparisonReporter:
             test = [metric, str(operation), formatter(baseline), formatter(contender),
                     diff_calc, unit]
             print_internal(test)
-            print_internal(str[diff_calc])
+            print_internal(''.join([diff_calc]))
             print_internal("End")
             return [metric, str(operation), formatter(baseline), formatter(contender),
                     diff_calc, unit]
