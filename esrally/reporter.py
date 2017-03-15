@@ -607,7 +607,7 @@ class ComparisonReporter:
             print_internal("Start")
             diff_calc = ''.join([self.diff(baseline, contender, treat_increase_as_improvement, formatter)])
             test = [metric, str(operation), formatter(baseline), formatter(contender),
-                    ''.join([self.diff(baseline, contender, treat_increase_as_improvement, formatter)]), unit]
+                    self.diff(baseline, contender, treat_increase_as_improvement, formatter), unit]
             print_internal(test)
             print_internal("Faith")
             print_internal(''.join([self.diff(baseline, contender, treat_increase_as_improvement, formatter)]))
@@ -629,7 +629,7 @@ class ComparisonReporter:
             color_smaller = console.format.green
 
         if diff > 0:
-            return color_greater("+%.5f" % diff)
+            return ("+%.5f" % diff)
         elif diff < 0:
             return color_smaller("%.5f" % diff)
         else:
