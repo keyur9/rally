@@ -604,18 +604,8 @@ class ComparisonReporter:
 
     def line(self, metric, baseline, contender, operation, unit, treat_increase_as_improvement, formatter=lambda x: x):
         if baseline is not None and contender is not None:
-            print_internal("Start")
-            diff_calc = ''.join([self.diff(baseline, contender, treat_increase_as_improvement, formatter)])
-            test = [metric, str(operation), formatter(baseline), formatter(contender),
-                    self.diff(baseline, contender, treat_increase_as_improvement, formatter), unit]
-            print_internal(test)
-            print_internal("Faith")
-            print_internal(''.join([self.diff(baseline, contender, treat_increase_as_improvement, formatter)]))
-            print_internal("Hope")
-            print_internal(diff_calc)
-            print_internal("End")
             return [metric, str(operation), formatter(baseline), formatter(contender),
-                    ''.join([self.diff(baseline, contender, treat_increase_as_improvement, formatter)]), unit]
+                    self.diff(baseline, contender, treat_increase_as_improvement, formatter), unit]
         else:
             return []
 
@@ -631,7 +621,7 @@ class ComparisonReporter:
         if diff > 0:
             return ("+%.5f" % diff)
         elif diff < 0:
-            return color_smaller("%.5f" % diff)
+            return ("%.5f" % diff)
         else:
             # tabulate needs this to align all values correctly
-            return console.format.neutral("%.5f" % diff)
+            return ("%.5f" % diff)
