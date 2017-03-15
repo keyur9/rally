@@ -607,13 +607,15 @@ class ComparisonReporter:
             print_internal("Start")
             diff_calc = ''.join([self.diff(baseline, contender, treat_increase_as_improvement, formatter)])
             test = [metric, str(operation), formatter(baseline), formatter(contender),
-                    diff_calc, unit]
+                    ''.join([self.diff(baseline, contender, treat_increase_as_improvement, formatter)]), unit]
             print_internal(test)
+            print_internal("Faith")
+            print_internal(''.join([self.diff(baseline, contender, treat_increase_as_improvement, formatter)]))
             print_internal("Hope")
             print_internal(diff_calc)
             print_internal("End")
             return [metric, str(operation), formatter(baseline), formatter(contender),
-                    diff_calc, unit]
+                    ''.join([self.diff(baseline, contender, treat_increase_as_improvement, formatter)]), unit]
         else:
             return []
 
