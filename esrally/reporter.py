@@ -423,8 +423,9 @@ class ComparisonReporter:
     def metrics_table(self, baseline_stats, contender_stats):
         metrics_table = []
         metrics_table += self.report_total_times(baseline_stats, contender_stats)
+        print_internal("Total Times", metrics_table)
         metrics_table += self.report_merge_part_times(baseline_stats, contender_stats)
-
+        print_internal("Merge Times", metrics_table)
         # metrics_table += self.report_cpu_usage(baseline_stats, contender_stats)
         metrics_table += self.report_gc_times(baseline_stats, contender_stats)
 
@@ -603,8 +604,10 @@ class ComparisonReporter:
         if baseline is not None and contender is not None:
             return [metric, str(operation), formatter(baseline), formatter(contender),
                     self.diff(baseline, contender, treat_increase_as_improvement, formatter), unit]
-            print_internal([metric, str(operation), formatter(baseline), formatter(contender),
-                    self.diff(baseline, contender, treat_increase_as_improvement, formatter), unit])
+            print_internal("Start")
+            print_internal(metric, str(operation), formatter(baseline), formatter(contender),
+                    self.diff(baseline, contender, treat_increase_as_improvement, formatter), unit)
+            print_internal("End")
         else:
             return []
 
