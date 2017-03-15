@@ -606,10 +606,10 @@ class ComparisonReporter:
         if baseline is not None and contender is not None:
             return [metric, str(operation), formatter(baseline), formatter(contender),
                     self.diff(baseline, contender, treat_increase_as_improvement, formatter), unit]
-            print_internal("Start")
-            print_internal(metric, str(operation), formatter(baseline), formatter(contender),
-                    self.diff(baseline, contender, treat_increase_as_improvement, formatter), unit)
-            print_internal("End")
+        print_internal("Start")
+        test = self.diff(baseline, contender, treat_increase_as_improvement, formatter)
+        print_internal(test)
+        print_internal("End")
         else:
             return []
 
