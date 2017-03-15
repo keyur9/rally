@@ -419,8 +419,6 @@ class ComparisonReporter:
 
         metric_table = self.metrics_table(baseline_stats, contender_stats)
         self.write_report(metric_table)
-        print_internal("Metric Table data")
-        print_internal(metric_table)
 
     def metrics_table(self, baseline_stats, contender_stats):
         metrics_table = []
@@ -612,6 +610,9 @@ class ComparisonReporter:
 
     def diff(self, baseline, contender, treat_increase_as_improvement, formatter=lambda x: x):
         diff = formatter(contender - baseline)
+        print_internal("")
+        print_internal(diff)
+        print_internal("")
         if treat_increase_as_improvement:
             color_greater = console.format.green
             color_smaller = console.format.red
