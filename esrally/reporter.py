@@ -603,12 +603,11 @@ class ComparisonReporter:
             return []
 
     def line(self, metric, baseline, contender, operation, unit, treat_increase_as_improvement, formatter=lambda x: x):
-        diff_calc = self.diff(baseline, contender, treat_increase_as_improvement, formatter)
-        test = (metric, str(operation), formatter(baseline), formatter(contender),
-                diff_calc, unit)
         if baseline is not None and contender is not None:
             print_internal("Start")
-
+            diff_calc = self.diff(baseline, contender, treat_increase_as_improvement, formatter)
+            test = (metric, str(operation), formatter(baseline), formatter(contender),
+                    diff_calc, unit)
             print_internal(test)
             print_internal(diff_calc)
             print_internal("End")
@@ -629,6 +628,8 @@ class ComparisonReporter:
             color_smaller = console.format.green
 
         if diff > 0:
+            print_internal("Greater")
+            print_internal(color_greater("+%.5f" % diff))
             return color_greater("+%.5f" % diff)
         elif diff < 0:
             return color_smaller("%.5f" % diff)
