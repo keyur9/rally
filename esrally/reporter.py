@@ -423,9 +423,11 @@ class ComparisonReporter:
     def metrics_table(self, baseline_stats, contender_stats):
         metrics_table = []
         metrics_table += self.report_total_times(baseline_stats, contender_stats)
-        print_internal("Total Times", metrics_table)
+        print_internal("Total Times")
+        print_internal(metrics_table)
         metrics_table += self.report_merge_part_times(baseline_stats, contender_stats)
-        print_internal("Merge Times", metrics_table)
+        print_internal("Merge Times")
+        print_internal(metrics_table)
         # metrics_table += self.report_cpu_usage(baseline_stats, contender_stats)
         metrics_table += self.report_gc_times(baseline_stats, contender_stats)
 
