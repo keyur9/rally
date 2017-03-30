@@ -418,7 +418,7 @@ class ComparisonReporter:
 
         metric_table_plain = self.metrics_table(baseline_stats, contender_stats, plain = True)
         metric_table_rich = self.metrics_table(baseline_stats, contender_stats, plain = False)
-        self.write_report(metric_table_plain)
+        self.write_report(metric_table_plain,metric_table_rich)
 
     def metrics_table(self, baseline_stats, contender_stats, plain):
         self.plain=plain
@@ -444,12 +444,14 @@ class ComparisonReporter:
                                  headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"],
                                  tablefmt="pipe", numalign="right", stralign="right")
 
-    def write_report(self, metrics_table):
+    def write_report(self, metrics_table, metrics_table_console):
         report_file = self._config.opts("reporting", "output.path")
         report_format = self._config.opts("reporting", "format")
         cwd = self._config.opts("node", "rally.cwd")
         write_single_report(report_file, report_format, cwd, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], 
             data= metrics_table, write_header=True)
+        write_single_report(report_file, report_format, cwd, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], 
+            data= metrics_table_console, write_header=True)
 
     def report_throughput(self, baseline_stats, contender_stats, operation):
         b_min, b_median, b_max, b_unit = baseline_stats.op_metrics[operation]["throughput"]
