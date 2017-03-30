@@ -613,9 +613,9 @@ class ComparisonReporter:
             color_smaller = console.format.green
 
         if diff > 0:
-            return ("+%.5f" % diff)
+            return color_greater("+%.5f" % diff)
         elif diff < 0:
-            return ("%.5f" % diff)
+            return color_smaller("%.5f" % diff)
         else:
             # tabulate needs this to align all values correctly
-            return ("%.5f" % diff)
+            return color_neutral("%.5f" % diff)
