@@ -416,10 +416,12 @@ class ComparisonReporter:
         print_header("------------------------------------------------------")
         print_internal("")
 
-        metric_table = self.metrics_table(baseline_stats, contender_stats)
-        self.write_report(metric_table)
+        metric_table_plain = self.metrics_table(baseline_stats, contender_stats, plain = True)
+        metric_table_rich = self.metrics_table(baseline_stats, contender_stats, plain = False)
+        self.write_report(metric_table_plain,metric_table_rich)
 
-    def metrics_table(self, baseline_stats, contender_stats):
+    def metrics_table(self, baseline_stats, contender_stats, plain):
+        self.plain=plain
         metrics_table = []
         metrics_table += self.report_total_times(baseline_stats, contender_stats)
         metrics_table += self.report_merge_part_times(baseline_stats, contender_stats)
@@ -605,12 +607,18 @@ class ComparisonReporter:
 
     def diff(self, baseline, contender, treat_increase_as_improvement, formatter=lambda x: x):
         diff = formatter(contender - baseline)
-        if treat_increase_as_improvement:
+        if self.plain:
+            color_greater = lambda x: x
+            color_smaller = lambda x: x
+            color_neutral = lambda x: x
+        elif treat_increase_as_improvement:
             color_greater = console.format.green
             color_smaller = console.format.red
+            color_neutral = console.format.neutral
         else:
             color_greater = console.format.red
             color_smaller = console.format.green
+            color_neutral = console.format.neutral
 
         if diff > 0:
             return color_greater("+%.5f" % diff)
