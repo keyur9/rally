@@ -448,8 +448,8 @@ class ComparisonReporter:
         report_file = self._config.opts("reporting", "output.path")
         report_format = self._config.opts("reporting", "format")
         cwd = self._config.opts("node", "rally.cwd")
-        write_single_report(report_file, report_format, cwd, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], 
-            data= metrics_table, write_header=True)
+        # write_single_report(report_file, report_format, cwd, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], 
+        #     data= metrics_table, write_header=True)
         write_single_report(report_file, report_format, cwd, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], 
             data= metrics_table_console, write_header=True)
 
