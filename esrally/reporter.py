@@ -34,7 +34,7 @@ def print_internal(message):
 def print_header(message):
     print_internal(console.format.bold(message))
 
-def write_single_report(report_file, report_format, cwd, headers, data, write_header=True, show_also_in_console=True):
+def write_single_report(report_file, report_format, cwd, headers, data, data_console, write_header=True, show_also_in_console=True):
     
     if report_format == "markdown":
         formatter = format_as_markdown
@@ -44,7 +44,7 @@ def write_single_report(report_file, report_format, cwd, headers, data, write_he
         raise exceptions.SystemSetupError("Unknown report format '%s'" % report_format)
 
     if show_also_in_console:
-        print_internal(formatter(headers, data))
+        print_internal(formatter(headers, data_console))
     if len(report_file) > 0:
         normalized_report_file = rio.normalize_path(report_file, cwd)
         logger.info("Writing report to [%s] (user specified: [%s]) in format [%s]" %
@@ -448,10 +448,8 @@ class ComparisonReporter:
         report_file = self._config.opts("reporting", "output.path")
         report_format = self._config.opts("reporting", "format")
         cwd = self._config.opts("node", "rally.cwd")
-        # write_single_report(report_file, report_format, cwd, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], 
-        #     data= metrics_table, write_header=True)
         write_single_report(report_file, report_format, cwd, headers=["Metric", "Operation", "Baseline", "Contender", "Diff", "Unit"], 
-            data= metrics_table_console, write_header=True)
+            data= metrics_table, data_console= metrics_table_console, write_header=True)
 
     def report_throughput(self, baseline_stats, contender_stats, operation):
         b_min, b_median, b_max, b_unit = baseline_stats.op_metrics[operation]["throughput"]
